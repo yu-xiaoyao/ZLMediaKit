@@ -120,7 +120,7 @@ inline void ShellSession::pleaseInputPasswd() {
             _loginInterceptor=nullptr;
         };
 
-        weak_ptr<ShellSession> weakSelf = dynamic_pointer_cast<ShellSession>(shared_from_this());
+        weak_ptr<ShellSession> weakSelf = static_pointer_cast<ShellSession>(shared_from_this());
         Broadcast::AuthInvoker invoker = [weakSelf,onAuth](const string &errMessage){
             auto strongSelf =  weakSelf.lock();
             if(!strongSelf){
@@ -135,9 +135,9 @@ inline void ShellSession::pleaseInputPasswd() {
             });
         };
 
-        auto flag = NoticeCenter::Instance().emitEvent(Broadcast::kBroadcastShellLogin,_strUserName,passwd,invoker,static_cast<SockInfo &>(*this));
-        if(!flag){
-            //如果无人监听shell登录事件，那么默认shell无法登录
+        auto flag = NOTICE_EMIT(BroadcastShellLoginArgs, Broadcast::kBroadcastShellLogin, _strUserName, passwd, invoker, *this);
+        if (!flag) {
+            // 如果无人监听shell登录事件，那么默认shell无法登录
             onAuth("please listen kBroadcastShellLogin event");
         }
         return true;
