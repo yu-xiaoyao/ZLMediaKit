@@ -1,4 +1,4 @@
-name: Linux-release
+name: Linux-release-aarch64
 
 on:
   push:
