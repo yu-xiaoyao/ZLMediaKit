@@ -10,6 +10,12 @@ jobs:
   build:
 
     runs-on: ubuntu-20.04
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     platform: 
+    #       - linux/amd64
+    #       - linux/arm64
 
     steps:
     - uses: actions/checkout@v1
@@ -37,4 +43,17 @@ jobs:
     - name: LS
       run: ls release/linux/Debug
 
+    - name: Create ZIP Dir
+      run: mkdir ZLMediaKit-linux
+
+    - name: Copy Need Files
+      run: |
+          cp "release/linux/Debug/MediaServer.exe" "ZLMediaKit-linux/"
+          cp "release/linux/Debug/mk_api.dll" -Destination "ZLMediaKit-linux/"
+          cp "release/linux/Debug/mk_api.lib" -Destination "ZLMediaKit-linux/"
+          cp "release/linux/Debug/default.pem" -Destination "ZLMediaKit-linux/"
+          cp "release/linux/Debug/config.ini" -Destination "ZLMediaKit-linux/"
+          cp -r "release/linux/Debug/www/" -Destination "ZLMediaKit-linux/"
       
+    - name: LS DIR
+      run: ls ZLMediaKit-linux/
