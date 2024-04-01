@@ -54,5 +54,21 @@ jobs:
           cp "release/linux/Debug/config.ini" "ZLMediaKit-linux/"
           cp -r "release/linux/Debug/www/" "ZLMediaKit-linux/"
       
-    - name: LS DIR
-      run: ls ZLMediaKit-linux/
+    - name: Package Files
+      if: startsWith(github.ref, 'refs/tags/')
+      run: tar -cvf ZLMediaKit-linux.tar ZLMediaKit-linux/
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        name: ZLMediaKit-linux
+        path: ZLMediaKit-linux.tar
+
+    - name: Release artifacts
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: ZLMediaKit-linux.tar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
