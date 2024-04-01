@@ -18,9 +18,45 @@ jobs:
     #       - linux/arm64
 
     steps:
-    - name: list
+
+    - uses: actions/checkout@v1
+
+    - name: 下载submodule源码
+      run: mv -f .gitmodules_github .gitmodules && git submodule sync && git submodule update --init
+
+    - name: apt-get安装依赖库(非必选)
+      run: sudo apt-get update && sudo apt-get install -y cmake libssl-dev libsdl-dev libavcodec-dev libavutil-dev libswscale-dev libresample-dev libusrsctp-dev
+
+    - name: 下载 SRTP
+      uses: actions/checkout@v2
+      with:
+        repository: cisco/libsrtp
+        fetch-depth: 1
+        ref: v2.3.0
+        path: 3rdpart/libsrtp
+
+    - name: 编译 SRTP
+      run: cd 3rdpart/libsrtp && ./configure --enable-openssl && make -j4 && sudo make install
+    
+    - name: list aarch64 lib
       run: apt-cache search aarch64
-    - name: install
+
+    - name: install aarch64 lib
       run: sudo apt-get install gcc-aarch64-linux-gnu
-    - name: test check
+
+    - name: find the aarch64 lib
       run: whereis aarch64-linux-gnu-gcc
+
+    - name: Set CMAKE_C_COMPILER 
+      run: set CMAKE_C_COMPILER=/usr/bin/aarch64-linux-gnu-gcc
+    - name: Set CMAKE_CXX_COMPILER 
+      run: set CMAKE_CXX_COMPILER=/usr/bin/aarch64-linux-gnu-++
+
+    - name: 编译
+      run: mkdir -p linux_build && cd linux_build && cmake .. -DENABLE_WEBRTC=true -DENABLE_FFMPEG=true && make -j $(nproc)
+
+    - name: ls so file
+      run: ls release/linux/Debug
+
+    - name: get file so arch
+      run: file release/linux/Debug/libmk_api.so
