@@ -1,8 +1,8 @@
-name: Linux-release-aarch64
+name: release-linux-aarch64
 
 on:
   push:
-    # branches: [ "master" ]
+    branches: [ "master" ]
     tags:
       - '*'
 
