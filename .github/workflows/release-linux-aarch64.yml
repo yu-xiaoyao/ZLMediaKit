@@ -44,13 +44,16 @@ jobs:
     - name: install aarch64 lib
       run: sudo apt-get install gcc-aarch64-linux-gnu
 
-    - name: find the aarch64 lib
+    - name: find the aarch64 gcc
       run: whereis aarch64-linux-gnu-gcc
 
-    - name: Set CMAKE_C_COMPILER 
+    - name: find the aarch64 g++
+      run: whereis aarch64-linux-gnu-g++
+
+    - name: Set CMAKE_C_COMPILER ENV
       run: set CMAKE_C_COMPILER=/usr/bin/aarch64-linux-gnu-gcc
-    - name: Set CMAKE_CXX_COMPILER 
-      run: set CMAKE_CXX_COMPILER=/usr/bin/aarch64-linux-gnu-++
+    - name: Set CMAKE_CXX_COMPILER ENV
+      run: set CMAKE_CXX_COMPILER=/usr/bin/aarch64-linux-gnu-g++
 
     - name: 编译
       run: mkdir -p linux_build && cd linux_build && cmake .. -DENABLE_WEBRTC=true -DENABLE_FFMPEG=true && make -j $(nproc)
