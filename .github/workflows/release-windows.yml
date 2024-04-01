@@ -2,7 +2,7 @@ name: Windows-release
 
 on:
   push:
-    branches: [ "master" ]
+    # branches: [ "master" ]
     tags:
       - '*'
 
