@@ -20,5 +20,7 @@ jobs:
     steps:
     - name: list
       run: apt-cache search aarch64
+    - name: install
+      run: sudo apt-get install gcc-aarch64-linux-gnu
     - name: test check
       run: whereis aarch64-linux-gnu-gcc
