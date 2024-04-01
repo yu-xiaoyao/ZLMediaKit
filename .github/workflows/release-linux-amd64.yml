@@ -2,7 +2,7 @@ name: Linux-release
 
 on:
   push:
-    branches: [ "master" ]
+    # branches: [ "master" ]
     tags:
       - '*'
 
