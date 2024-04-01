@@ -1,0 +1,23 @@
+name: Linux-release
+
+on:
+  push:
+    # branches: [ "master" ]
+    tags:
+      - '*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     platform: 
+    #       - linux/amd64
+    #       - linux/arm64
+
+    steps:
+    - name: list
+      run: apt-cache search aarch64
+ 
