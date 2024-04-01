@@ -40,9 +40,6 @@ jobs:
     - name: 编译
       run: mkdir -p linux_build && cd linux_build && cmake .. -DENABLE_WEBRTC=true -DENABLE_FFMPEG=true && make -j $(nproc)
 
-    - name: LS
-      run: ls release/linux/Debug
-
     - name: Create ZIP Dir
       run: mkdir ZLMediaKit-linux
 
