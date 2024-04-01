@@ -32,9 +32,23 @@ jobs:
           buildDirectory: '${{github.workspace}}/build'
           cmakeAppendedArgs: '-DCMAKE_ENABLE_WEBRTC:BOOL=ON'
           cmakeBuildType: 'RelWithDebInfo'
-      - name: 打包 release-w-d
+
+      - name: 打包 release-w-d-test
         run: ls release/windows/RelWithDebInfo
+
+      - name: Create ZIP Dir
+        run: mkdir ZLMediaKit-windows
+
+      - name: Copy Need Files
+        run: |
+          Copy-Item "release/windows/RelWithDebInfo/MediaServer.exe" -Destination "ZLMediaKit-windows/"
+          Copy-Item "release/windows/RelWithDebInfo/mk_api.dll" -Destination "ZLMediaKit-windows/"
+          Copy-Item "release/windows/RelWithDebInfo/mk_api.lib" -Destination "ZLMediaKit-windows/"
+          Copy-Item "release/windows/RelWithDebInfo/default.pem" -Destination "ZLMediaKit-windows/"
+          Copy-Item "release/windows/RelWithDebInfo/config.ini" -Destination "ZLMediaKit-windows/"
+
       - name: 打包 release
-        run: Compress-Archive -Path release/windows/RelWithDebInfo/* -DestinationPath ZLMediaKit-windows.zip
+        run: Compress-Archive -Path ZLMediaKit-windows/* -DestinationPath ZLMediaKit-windows.zip
+
       - name: ls pkg
         run: ls .
