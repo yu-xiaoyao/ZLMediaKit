@@ -49,10 +49,10 @@ jobs:
     - name: Copy Need Files
       run: |
           cp "release/linux/Debug/MediaServer" "ZLMediaKit-linux/"
-          cp "release/linux/Debug/libmk_api.so" -Destination "ZLMediaKit-linux/"
-          cp "release/linux/Debug/default.pem" -Destination "ZLMediaKit-linux/"
-          cp "release/linux/Debug/config.ini" -Destination "ZLMediaKit-linux/"
-          cp -r "release/linux/Debug/www/" -Destination "ZLMediaKit-linux/"
+          cp "release/linux/Debug/libmk_api.so" "ZLMediaKit-linux/"
+          cp "release/linux/Debug/default.pem" "ZLMediaKit-linux/"
+          cp "release/linux/Debug/config.ini" "ZLMediaKit-linux/"
+          cp -r "release/linux/Debug/www/" "ZLMediaKit-linux/"
       
     - name: LS DIR
       run: ls ZLMediaKit-linux/
