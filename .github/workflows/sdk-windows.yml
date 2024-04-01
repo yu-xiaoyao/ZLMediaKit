@@ -32,5 +32,10 @@ jobs:
           buildDirectory: '${{github.workspace}}/build'
           cmakeAppendedArgs: '-DCMAKE_ENABLE_WEBRTC:BOOL=ON'
           cmakeBuildType: 'RelWithDebInfo'
-      - name: 打包
-        run: ls ./
+      - name: 打包 release
+        run: ls release
+      - name: 打包 release-w
+        run: ls release/windows
+      - name: 打包 release-w-d
+        run: ls release/windows/Debug
+        
