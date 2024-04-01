@@ -33,9 +33,6 @@ jobs:
           cmakeAppendedArgs: '-DCMAKE_ENABLE_WEBRTC:BOOL=ON'
           cmakeBuildType: 'RelWithDebInfo'
 
-      - name: 打包 release-w-d-test
-        run: ls release/windows/RelWithDebInfo
-
       - name: Create ZIP Dir
         run: mkdir ZLMediaKit-windows
 
@@ -50,5 +47,17 @@ jobs:
       - name: 打包 release
         run: Compress-Archive -Path ZLMediaKit-windows/* -DestinationPath ZLMediaKit-windows.zip
 
-      - name: ls pkg
-        run: ls .
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: ZLMediaKit-windows
+          path: ZLMediaKit-windows.zip
+
+      - name: Release artifacts
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ZLMediaKit-windows.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
