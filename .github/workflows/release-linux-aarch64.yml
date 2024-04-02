@@ -9,55 +9,19 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest-arm64
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    
-    - name: 下载submodule源码
-      run: mv -f .gitmodules_github .gitmodules && git submodule sync && git submodule update --init
 
-    - name: apt-get安装依赖库(非必选)
-      run: sudo apt-get update && sudo apt-get install -y cmake libssl-dev libsdl-dev libavcodec-dev libavutil-dev libswscale-dev libresample-dev libusrsctp-dev
+    - uses: actions/checkout@v3
 
-    - name: 下载 SRTP
-      uses: actions/checkout@v2
+    - name: Run test suite in chroot environment
+      uses: pguyot/arm-runner-action@v2
+      id: arm_runner_build
       with:
-        repository: cisco/libsrtp
-        fetch-depth: 1
-        ref: v2.3.0
-        path: 3rdpart/libsrtp
-
-    - name: 编译 SRTP
-      run: cd 3rdpart/libsrtp && ./configure --enable-openssl && make -j4 && sudo make install
-
-    - name: list aarch64 lib
-      run: apt-cache search aarch64
-
-    - name: install aarch64 lib
-      run: sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
-
-    - name: find the aarch64 gcc
-      run: whereis aarch64-linux-gnu-gcc
-
-    - name: ls usr-bin
-      run: ls /usr/bin |grep aarch64
-
-    - name: write cmake file
-      run: |
-        echo "SET (CMAKE_SYSTEM_NAME Linux)
-        SET (CMAKE_SYSTEM_PROCESSOR aarch64)
-        SET (CMAKE_C_COMPILER /usr/bin/aarch64-linux-gnu-gcc)
-        SET (CMAKE_CXX_COMPILER /usr/bin/aarch64-linux-gnu-g++)" > linux-aarch64.cmake
-    - name: get new cmake
-      run: cat linux-aarch64.cmake
-
-    - name: 编译
-      run: mkdir -p linux_build && cd linux_build && cmake .. -DCMAKE_TOOLCHAIN_FILE=../linux-aarch64.cmake -DENABLE_WEBRTC=true -DENABLE_FFMPEG=true && make -j $(nproc)
-
-    - name: ls so file
-      run: ls release/linux/Debug
-
-    - name: get file so arch
-      run: file release/linux/Debug/libmk_api.so
-
+        base_image: raspios_lite_arm64:latest
+        cpu: cortex-a53
+        cpu_info: raspberrypi_zero2_w_arm64_w
+        commands: |
+          sudo apt-get update && sudo apt-get install -y cmake libssl-dev libsdl-dev libavcodec-dev libavutil-dev libswscale-dev libresample-dev libusrsctp-dev
+    
