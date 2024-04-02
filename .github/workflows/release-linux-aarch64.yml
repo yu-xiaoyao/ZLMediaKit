@@ -38,5 +38,20 @@ jobs:
         cpu_info: cpuinfo/raspberrypi_zero2_w_arm64
         image_additional_mb: 2048
         commands: |
+          sudo apt-get update && sudo apt-get install -y cmake libssl-dev libsdl1.2-dev libavcodec-dev libavutil-dev libswscale-dev libresample-dev libusrsctp-dev
+          sudo apt-get clean
           pwd
           ls -ltrh .
+          cd 3rdpart/libsrtp && ./configure --enable-openssl && make -j4 && sudo make install
+          mkdir -p linux_build && cd linux_build && cmake .. -DENABLE_WEBRTC=true -DENABLE_FFMPEG=true && make -j $(nproc)
+          ls release/linux/Debug
+          file release/linux/Debug/libmk_api.so
+      
+    - name: ls so file
+      run: ls release/linux/Debug
+    
+    - name: get file so arch
+      run: file release/linux/Debug/libmk_api.so
+    
+    
+
