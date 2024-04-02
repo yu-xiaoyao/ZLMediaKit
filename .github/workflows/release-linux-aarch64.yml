@@ -15,13 +15,13 @@ jobs:
 
     - uses: actions/checkout@v3
 
-    - name: Run test suite in chroot environment
+    - name: Run Build ARM lib in chroot environment
       uses: pguyot/arm-runner-action@v2
       id: arm_runner_build
       with:
         base_image: raspios_lite_arm64:latest
         cpu: cortex-a53
-        cpu_info: raspberrypi_zero2_w_arm64_w
+        cpu_info: cpuinfo/raspberrypi_zero2_w_arm64
         commands: |
           sudo apt-get update && sudo apt-get install -y cmake libssl-dev libsdl-dev libavcodec-dev libavutil-dev libswscale-dev libresample-dev libusrsctp-dev
     
