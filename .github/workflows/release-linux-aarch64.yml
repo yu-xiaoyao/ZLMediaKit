@@ -47,7 +47,12 @@ jobs:
           pwd
           ls -ltrh .
           cd 3rdpart/libsrtp && ./configure --enable-openssl && make -j4 && sudo make install
+          pwd
+          cd ../..
+          pwd
           mkdir -p linux_build && cd linux_build && cmake .. -DENABLE_WEBRTC=true -DENABLE_FFMPEG=true && make -j $(nproc)
+          cd ..
+          pwd
           ls release/linux/Debug
           file release/linux/Debug/libmk_api.so
       
