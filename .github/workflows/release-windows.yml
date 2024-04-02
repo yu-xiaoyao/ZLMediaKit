@@ -34,9 +34,11 @@ jobs:
           cmakeBuildType: 'RelWithDebInfo'
 
       - name: Create ZIP Dir
+        if: startsWith(github.ref, 'refs/tags/')
         run: mkdir ZLMediaKit-windows
 
       - name: Copy Need Files
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           Copy-Item "release/windows/RelWithDebInfo/MediaServer.exe" -Destination "ZLMediaKit-windows/"
           Copy-Item "release/windows/RelWithDebInfo/mk_api.dll" -Destination "ZLMediaKit-windows/"

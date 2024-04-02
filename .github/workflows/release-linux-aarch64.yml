@@ -2,7 +2,7 @@ name: release-linux-aarch64
 
 on:
   push:
-    branches: [ "master" ]
+    # branches: [ "master" ]
     tags:
       - '*'
 
@@ -63,5 +63,34 @@ jobs:
     - name: get file so arch
       run: file release/linux/Debug/libmk_api.so
     
-    
+    - name: Create ZIP Dir
+      if: startsWith(github.ref, 'refs/tags/')
+      run: mkdir ZLMediaKit-linux
 
+    - name: Copy Need Files
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+          cp "release/linux/Debug/MediaServer" "ZLMediaKit-linux/"
+          cp "release/linux/Debug/libmk_api.so" "ZLMediaKit-linux/"
+          cp "release/linux/Debug/default.pem" "ZLMediaKit-linux/"
+          cp "release/linux/Debug/config.ini" "ZLMediaKit-linux/"
+          cp -r "release/linux/Debug/www/" "ZLMediaKit-linux/"
+      
+    - name: Package Files
+      if: startsWith(github.ref, 'refs/tags/')
+      run: tar -cvf ZLMediaKit-linux_aarch64.tar ZLMediaKit-linux/
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        name: ZLMediaKit-linux_aarch64
+        path: ZLMediaKit-linux_aarch64.tar
+
+    - name: Release artifacts
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: ZLMediaKit-linux_aarch64.tar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
